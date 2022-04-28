@@ -71,7 +71,7 @@ const googleSignIn = async (req, res = response) => {
 
 		await usuario.save();
 		// Generar token
-		const token = await generarJWT(usuario);
+		const token = await generarJWT(usuario.id);
 
 		res.json({
 			ok: true,
@@ -89,12 +89,15 @@ const googleSignIn = async (req, res = response) => {
 };
 
 const renewToken = async (req, res = reponse) => {
-	const uid = req.params.id;
+	const uid = req.uid;
+	const usuarioDB = await Usuario.findById(uid);
+
 
 	const token = await generarJWT(uid);
 	res.json({
 		ok: true,
-		token
+		token,
+		usuario: usuarioDB
 	});
 };
 
