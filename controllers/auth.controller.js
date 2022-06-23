@@ -68,7 +68,6 @@ const googleSignIn = async (req, res = response) => {
 		}
 
 		// Guardar en base de datos
-
 		await usuario.save();
 		// Generar token
 		const token = await generarJWT(usuario.id);

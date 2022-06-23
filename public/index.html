@@ -4,36 +4,39 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="google-signin-client_id"
-      content="711704106982-qgabo3kkv2n6kuhi6lmps3lb6go0hp3q.apps.googleusercontent.com"
-    />
-    <title>Demo Login</title>
+    <title>Document</title>
   </head>
   <body>
     <h1>Google Sign-In</h1>
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-    <a href="#" onclick="signOut();">Sign Out</a>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <div id="buttonDiv"></div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-      function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId());
-        console.log("Name: " + profile.getName());
-        console.log("Image URL: " + profile.getImageUrl());
-        console.log("Email: " + profile.getEmail());
+      var url = "http://localhost:3000/api/login/google";
+      function handleCredentialResponse(response) {
+        // console.log("Encoded JWT ID token: " + response.credential);
 
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log(id_token);
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: response.credential }),
+        })
+          .then((resp) => resp.json())
+          .then((data) => console.log("La respuesta", data))
+          .catch(console.log);
       }
-
-      // Cerrar sesión
-      function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-          console.log("User signed out");
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id:
+            "711704106982-15gqsq5jvhohtpganah9nu55g7lpfefd.apps.googleusercontent.com",
+          callback: handleCredentialResponse,
         });
-      }
+        google.accounts.id.renderButton(
+          document.getElementById("buttonDiv"),
+          { theme: "outline", size: "large" } // customization attributes
+        );
+        google.accounts.id.prompt(); // also display the One Tap dialog
+      };
     </script>
   </body>
 </html>
