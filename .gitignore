@@ -2,6 +2,8 @@ node_modules/
 
 !uploads/
 uploads/*
+!uploads/usuarios/
+uploads/usuarios/*
 !uploads/no-img.png
 !uploads/no-img.jpg
 
